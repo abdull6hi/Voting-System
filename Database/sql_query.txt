@@ -1,0 +1,37 @@
+-- Create the database
+CREATE DATABASE IF NOT EXISTS db_semester_project;
+USE db_semester_project;
+
+-- Users table with integer admission numbers (no characters)
+CREATE TABLE IF NOT EXISTS tbl_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    admission_number INT UNIQUE NOT NULL,  -- Changed to INT only
+    password VARCHAR(255) NOT NULL,
+    role ENUM('student', 'candidate', 'admin') DEFAULT 'student',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_admission (admission_number)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Votes table (simplified without candidate table)
+CREATE TABLE IF NOT EXISTS tbl_votes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    voter_id INT NOT NULL,                -- References admission_number as INT
+    candidate_id INT NOT NULL,            -- References admission_number as INT
+    vote_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (voter_id) REFERENCES tbl_users(admission_number) ON DELETE CASCADE,
+    FOREIGN KEY (candidate_id) REFERENCES tbl_users(admission_number) ON DELETE CASCADE,
+    UNIQUE KEY unique_voter (voter_id),   -- Prevents duplicate voting
+    INDEX idx_voter (voter_id),
+    INDEX idx_candidate (candidate_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create ONLY the admin user (no test users)
+-- Default admin credentials: admission_number=1000, password=admin123
+INSERT INTO tbl_users (full_name, admission_number, password, role)
+VALUES (
+    'System Admin',
+    1000,                                -- Integer admission number
+    'admin123',                          -- Plaintext password (hash this in production)
+    'admin'
+) ON DUPLICATE KEY UPDATE role = 'admin';  -- Ensures admin role if user exists
