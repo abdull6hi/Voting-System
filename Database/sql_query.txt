@@ -1,27 +1,39 @@
--- Create database
+-- Create the database
 CREATE DATABASE IF NOT EXISTS university_voting;
 USE university_voting;
 
--- Create users table
+-- Create the users table
 CREATE TABLE IF NOT EXISTS tbl_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     full_name VARCHAR(100) NOT NULL,
-    admission_number VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100),
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(20) NOT NULL DEFAULT 'student'
+    admission_number VARCHAR(20) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    role ENUM('student', 'candidate', 'admin') DEFAULT 'student'
 );
 
--- Create votes table
+-- Create the votes table
 CREATE TABLE IF NOT EXISTS tbl_votes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    voter_admission_number VARCHAR(50) NOT NULL,
-    candidate_admission_number VARCHAR(50) NOT NULL,
-    vote_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (voter_admission_number) REFERENCES tbl_users(admission_number),
-    FOREIGN KEY (candidate_admission_number) REFERENCES tbl_users(admission_number)
+    voter_admission VARCHAR(20) NOT NULL,
+    candidate_admission VARCHAR(20) NOT NULL,
+    FOREIGN KEY (voter_admission) REFERENCES tbl_users(admission_number)
+        ON DELETE CASCADE,
+    FOREIGN KEY (candidate_admission) REFERENCES tbl_users(admission_number)
+        ON DELETE CASCADE
 );
 
--- Insert admin user
-INSERT INTO tbl_users (full_name, admission_number, email, password, role)
-VALUES ('Admin User', 'admin001', 'admin@example.com', 'adminpassword', 'admin');
+-- Optional: Create a view for vote counts
+CREATE OR REPLACE VIEW view_vote_results AS
+SELECT 
+    u.full_name AS candidate_name,
+    u.admission_number AS candidate_admission,
+    COUNT(v.id) AS total_votes
+FROM tbl_users u
+LEFT JOIN tbl_votes v ON u.admission_number = v.candidate_admission
+WHERE u.role = 'candidate'
+GROUP BY u.admission_number, u.full_name;
+
+-- Insert an admin user
+INSERT INTO tbl_users (full_name, admission_number, password, role)
+VALUES ('Admin User', 'admin001', 'admin123', 'admin')
+ON DUPLICATE KEY UPDATE full_name = VALUES(full_name);
