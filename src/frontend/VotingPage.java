@@ -2,6 +2,7 @@ package frontend;
 
 import backend.User;
 import backend.VoteDAO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -78,7 +79,8 @@ public class VotingPage extends JFrame {
         candidatePanel.repaint();
     }
 
-    private void addCandidateButton(String name, int admission) {
+    // Changed 'admission' type from int to String here:
+    private void addCandidateButton(String name, String admission) {
         JButton voteButton = new JButton(name);
         voteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         voteButton.setMaximumSize(new Dimension(400, 50));
@@ -102,6 +104,7 @@ public class VotingPage extends JFrame {
 
                     if (confirm == JOptionPane.YES_OPTION) {
                         try {
+                            // Pass admission as String
                             VoteDAO.castVote(currentUser.getAdmissionNumber(), admission);
                             voteButton.setText(name + " (Voted)");
                             voteButton.setEnabled(false);

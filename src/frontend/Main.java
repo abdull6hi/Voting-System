@@ -9,8 +9,8 @@ public class Main {
                 // Set system look and feel
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
-                // Initialize and show home page
-                new HomePage().setVisible(true);
+                // Start the app by showing the login page
+                new LoginPage().setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
