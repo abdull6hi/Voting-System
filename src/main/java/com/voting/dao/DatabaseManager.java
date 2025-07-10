@@ -5,6 +5,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import java.sql.*;
 
 
+
 /**
  * Handles all database operations with connection pooling.
  * Hardcoded for XAMPP's MySQL configuration.
