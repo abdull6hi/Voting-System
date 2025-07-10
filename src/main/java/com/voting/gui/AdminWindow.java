@@ -1,5 +1,6 @@
 package com.voting.gui;
 
+
 import com.voting.Main;
 import com.voting.exception.VotingException;
 import com.voting.model.Candidate;
