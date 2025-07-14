@@ -5,7 +5,7 @@ This is a collaborative Java project developed by five Computer Science students
 - Adan
 - Yassir
 - Ruto
-- Abdullahi (Team lead)
+- Abdullahi
 
 🛠️ Technologies Used
 - Language: Java
