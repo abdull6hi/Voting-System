@@ -6,6 +6,7 @@ This is a collaborative Java project developed by five Computer Science students
 - Yassir
 - Ruto
 - Abdullahi (Team lead)
+
 🛠️ Technologies Used
 - Language: Java
 - UI Framework: Java Swing
